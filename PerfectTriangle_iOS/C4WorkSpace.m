@@ -52,6 +52,17 @@
     
     [triangle setFrame:triangleFrame];
     
+    NSArray *patternArray = [NSArray arrayWithObjects:
+                             [NSNumber numberWithInt:2],
+                             [NSNumber numberWithInt:10],
+                             nil];
+    triangle.lineDashPattern = patternArray;
+    
+    [triangle addGesture:TAP name:@"tap" action:@"tapped"];
+    
+       //[triangle set]
+    //[triangle setDashPattern:@[10.0f,2.2f] pointCount:2];
+    
     [self.canvas addShape:triangle];
     [self.canvas addShape:controlA];
     
@@ -61,6 +72,7 @@
     //listen for when the control shapes are moved and update the curves as needed
     [self listenFor:@"moved" fromObject:controlA andRunMethod:@"updateControlA"];
     
+    [self listenFor:@"tapped" fromObject:triangle andRunMethod:@"changeTriColor"];
     
     controlA.center = trianglePoints[0] ;
 }
@@ -91,17 +103,19 @@
 }
 
 
--(void)makeNewTriangle {
-    
-    
-    
-    trianglePoints[0] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
-    trianglePoints[1] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
-    trianglePoints[2] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
-
-    [self makeNewTribounds]; 
-    
+-(void) changeTriColor {
+    triangle.fillColor = [UIColor redColor];
 }
+
+//-(void)makeNewTriangle {
+//    
+//    trianglePoints[0] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
+//    trianglePoints[1] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
+//    trianglePoints[2] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
+//
+//    [self makeNewTribounds]; 
+//    
+//}
 
 
 
