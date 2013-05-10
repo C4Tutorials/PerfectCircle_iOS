@@ -16,7 +16,7 @@
     C4Shape *triangle;
     CGPoint trianglePoints[3];
     //CGFloat pattern[2];
-    C4Shape *controlA;
+    C4Shape *controlA, *hub1, *hub2;
     CGRect triangleFrame;
     Boolean isRed;
 }
@@ -42,8 +42,15 @@
     
     //create 3 control shapes
     CGRect controlFrame = CGRectMake(0, 0, 22, 22);
+    CGRect hubFrame = CGRectMake(0, 0, 10, 10);
     controlA = [C4Shape ellipse:controlFrame];
+    hub1 = [C4Shape ellipse:hubFrame];
+    hub2 = [C4Shape ellipse:hubFrame];
     controlA.fillColor = [UIColor blackColor];
+    hub1.fillColor = [UIColor whiteColor];
+    hub2.fillColor = [UIColor whiteColor];
+    hub1.lineWidth = 0;
+    hub2.lineWidth = 0; 
     
     //move control shapes points to the coordinates of the curve control points
     
@@ -68,6 +75,8 @@
     
     [self.canvas addShape:triangle];
     [self.canvas addShape:controlA];
+    [self.canvas addShape:hub1];
+    [self.canvas addShape:hub2];
     
     //add drag gestures to the control shapes
     [controlA addGesture:PAN name:@"panGesture" action:@"move:"];
@@ -78,6 +87,8 @@
     [self listenFor:@"tapped" fromObject:triangle andRunMethod:@"changeTriColor"];
     
     controlA.center = trianglePoints[0] ;
+    hub1.center = trianglePoints[1];
+    hub2.center = trianglePoints[2]; 
 }
 
 
