@@ -18,7 +18,7 @@
     //CGFloat pattern[2];
     C4Shape *controlA, *hub1, *hub2;
     CGRect triangleFrame;
-    Boolean isRed;
+    NSInteger soften; 
 }
 
 -(void)setup {
@@ -26,21 +26,22 @@
     [C4Shape defaultStyle].fillColor = [UIColor blackColor];
     [C4Shape defaultStyle].strokeColor = [UIColor whiteColor];
     
-    isRed = NO;
+    soften = 6;
     
     self.canvas.backgroundColor = [UIColor blackColor];
     
     triangle.strokeColor = [UIColor whiteColor];
     triangle.fillColor = [UIColor clearColor];
+    [triangle setMiterLimit:0]; 
     
-    trianglePoints[0] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
-    trianglePoints[1] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
-    trianglePoints[2] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
+    trianglePoints[0] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/soften andB:self.canvas.width - self.canvas.width/soften], [C4Math randomIntBetweenA:self.canvas.height/soften andB:self.canvas.height - self.canvas.height/soften]);
+    trianglePoints[1] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/soften andB:self.canvas.width - self.canvas.width/soften], [C4Math randomIntBetweenA:self.canvas.height/soften andB:self.canvas.height - self.canvas.height/soften]);
+    trianglePoints[2] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/soften andB:self.canvas.width - self.canvas.width/soften], [C4Math randomIntBetweenA:self.canvas.height/soften andB:self.canvas.height - self.canvas.height/soften]);
     
     
     triangle = [C4Shape triangle:trianglePoints];
     
-    //create 3 control shapes
+    //create 3 shapes for tips of triangle
     CGRect controlFrame = CGRectMake(0, 0, 22, 22);
     CGRect hubFrame = CGRectMake(0, 0, 10, 10);
     controlA = [C4Shape ellipse:controlFrame];
@@ -52,15 +53,7 @@
     hub1.lineWidth = 0;
     hub2.lineWidth = 0; 
     
-    //move control shapes points to the coordinates of the curve control points
-    
-    
-    CGFloat xOrigin = [C4Math minOfA:trianglePoints[0].x B:trianglePoints[1].x C:trianglePoints[2].x];
-    CGFloat yOrigin = [C4Math minOfA:trianglePoints[0].y B:trianglePoints[1].y C:trianglePoints[2].y];
-    
-    triangleFrame = CGRectMake(xOrigin, yOrigin, triangle.bounds.size.width, triangle.bounds.size.height);
-    
-    [triangle setFrame:triangleFrame];
+    [self makeNewTribounds]; 
     
     NSArray *patternArray = [NSArray arrayWithObjects:
                              [NSNumber numberWithInt:2],
@@ -103,24 +96,10 @@
 }
 
 -(void)makeNewTribounds {
-    
     CGFloat xOrigin = [C4Math minOfA:trianglePoints[0].x B:trianglePoints[1].x C:trianglePoints[2].x];
     CGFloat yOrigin = [C4Math minOfA:trianglePoints[0].y B:trianglePoints[1].y C:trianglePoints[2].y];
     triangleFrame = CGRectMake(xOrigin, yOrigin, triangle.bounds.size.width, triangle.bounds.size.height);
     [triangle setFrame:triangleFrame];
-}
-
-
--(void) changeTriColor {
-    
-    if (!isRed) {
-    triangle.fillColor = [UIColor redColor];
-        isRed = YES; 
-    }
-    else {
-    triangle.fillColor = [UIColor blackColor];
-        isRed = NO;
-    }
 }
 
 -(void)makeNewTriangle {
@@ -129,15 +108,57 @@
     trianglePoints[1] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
     trianglePoints[2] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
 
-    [triangle triangle:trianglePoints];
+    
     controlA.center = trianglePoints[0] ;
     hub1.center = trianglePoints[1];
     hub2.center = trianglePoints[2];
+    
+    [triangle triangle:trianglePoints];
     
     [self makeNewTribounds];
     
 }
 
+
+-(void)touchesMoved:(NSSet*)touches withEvent:(UIEvent *)event {
+    
+    CGPoint p = [[touches anyObject] locationInView:self.canvas];
+    
+    controlA.center = p;
+    
+    [self updateControlA];
+    //C4Log(@"CGPointMake(%.2f,%.2f)", p.x, p.y);
+    
+    
+    
+    //NSString * aString = @"travis";
+    
+    //NSString *s = [NSString stringWithFormat:@"sdjlksdj %f,%d,%@", 1.0,2,aString];
+    
+    //C4Log(s);
+    
+}
+
+
+
+-(void)touchesBegan:(NSSet*)touches withEvent:(UIEvent *)event {
+    
+    CGPoint p = [[touches anyObject] locationInView:self.canvas];
+    
+    controlA.center = p;
+    
+    [self updateControlA];
+    //C4Log(@"CGPointMake(%.2f,%.2f)", p.x, p.y);
+    
+    
+    
+    //NSString * aString = @"travis";
+    
+    //NSString *s = [NSString stringWithFormat:@"sdjlksdj %f,%d,%@", 1.0,2,aString];
+    
+    //C4Log(s);
+    
+}
 
 
 
