@@ -18,12 +18,15 @@
     //CGFloat pattern[2];
     C4Shape *controlA;
     CGRect triangleFrame;
+    Boolean isRed;
 }
 
 -(void)setup {
     
     [C4Shape defaultStyle].fillColor = [UIColor blackColor];
     [C4Shape defaultStyle].strokeColor = [UIColor whiteColor];
+    
+    isRed = NO;
     
     self.canvas.backgroundColor = [UIColor blackColor];
     
@@ -104,7 +107,15 @@
 
 
 -(void) changeTriColor {
+    
+    if (!isRed) {
     triangle.fillColor = [UIColor redColor];
+        isRed = YES; 
+    }
+    else {
+    triangle.fillColor = [UIColor blackColor];
+        isRed = NO;
+    }
 }
 
 //-(void)makeNewTriangle {
