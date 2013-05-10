@@ -57,6 +57,7 @@
     
     //add drag gestures to the control shapes
     [controlA addGesture:PAN name:@"panGesture" action:@"move:"];
+    
     //listen for when the control shapes are moved and update the curves as needed
     [self listenFor:@"moved" fromObject:controlA andRunMethod:@"updateControlA"];
     
@@ -75,7 +76,7 @@
     
     [self makeNewTribounds];
     
-    [triangle setFrame:triangleFrame];
+    
     
 }
 
@@ -85,6 +86,21 @@
     CGFloat yOrigin = [C4Math minOfA:trianglePoints[0].y B:trianglePoints[1].y C:trianglePoints[2].y];
     
     triangleFrame = CGRectMake(xOrigin, yOrigin, triangle.bounds.size.width, triangle.bounds.size.height);
+    
+    [triangle setFrame:triangleFrame];
+}
+
+
+-(void)makeNewTriangle {
+    
+    
+    
+    trianglePoints[0] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
+    trianglePoints[1] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
+    trianglePoints[2] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
+
+    [self makeNewTribounds]; 
+    
 }
 
 
