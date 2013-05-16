@@ -18,7 +18,15 @@
     //CGFloat pattern[2];
     C4Shape *controlA, *hub1, *hub2;
     CGRect triangleFrame;
-    NSInteger soften; 
+    NSInteger soften;
+    
+    CGContextRef graphicsContext;
+    
+    //UIImage *graphicsImage;
+    UIImage *graphicsImage;
+    
+    
+       
 }
 
 -(void)setup {
@@ -56,8 +64,8 @@
     [self makeNewTribounds]; 
     
     NSArray *patternArray = [NSArray arrayWithObjects:
-                             [NSNumber numberWithInt:2],
-                             [NSNumber numberWithInt:10],
+                             [NSNumber numberWithInt:4],
+                             [NSNumber numberWithInt:20],
                              nil];
     triangle.lineDashPattern = patternArray;
     
@@ -104,6 +112,8 @@
 
 -(void)makeNewTriangle {
     
+    [self drawToTheDamnContext]; 
+    
     trianglePoints[0] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
     trianglePoints[1] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
     trianglePoints[2] = CGPointMake([C4Math randomIntBetweenA:self.canvas.width/8 andB:self.canvas.width - self.canvas.width/8], [C4Math randomIntBetweenA:self.canvas.height/8 andB:self.canvas.height - self.canvas.height/8]);
@@ -123,20 +133,9 @@
 -(void)touchesMoved:(NSSet*)touches withEvent:(UIEvent *)event {
     
     CGPoint p = [[touches anyObject] locationInView:self.canvas];
-    
     controlA.center = p;
-    
     [self updateControlA];
-    //C4Log(@"CGPointMake(%.2f,%.2f)", p.x, p.y);
-    
-    
-    
-    //NSString * aString = @"travis";
-    
-    //NSString *s = [NSString stringWithFormat:@"sdjlksdj %f,%d,%@", 1.0,2,aString];
-    
-    //C4Log(s);
-    
+
 }
 
 
@@ -144,22 +143,30 @@
 -(void)touchesBegan:(NSSet*)touches withEvent:(UIEvent *)event {
     
     CGPoint p = [[touches anyObject] locationInView:self.canvas];
-    
     controlA.center = p;
-    
     [self updateControlA];
-    //C4Log(@"CGPointMake(%.2f,%.2f)", p.x, p.y);
-    
-    
-    
-    //NSString * aString = @"travis";
-    
-    //NSString *s = [NSString stringWithFormat:@"sdjlksdj %f,%d,%@", 1.0,2,aString];
-    
-    //C4Log(s);
     
 }
 
+-(void) drawToTheDamnContext {
+    
+    graphicsContext = [self createImageContext];
+    [self.canvas renderInContext:graphicsContext];
+   
+    
+    graphicsImage = UIGraphicsGetImageFromCurrentImageContext();
+//    
+//    CGImageCreateWithPNGDataProvider(graphicsContext, , <#bool shouldInterpolate#>, <#CGColorRenderingIntent intent#>)
+//    graphicsImageRef = CGImageCreateWithJPEGDataProvider(graphicsContext, <#const CGFloat *decode#>, NO, Fixed);
+//    CGImage
+    
+}
+
+
+-(CGContextRef)createImageContext {
+    UIGraphicsBeginImageContext(self.canvas.frame.size);
+    return UIGraphicsGetCurrentContext();
+}
 
 
 @end
